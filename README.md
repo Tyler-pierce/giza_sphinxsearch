@@ -2,7 +2,7 @@ Giza Sphinx Search
 ======
 Revived the old Giza erlang client for sphinx full text search, for Elixir. Sphinx is quality software and a great choice for elixir programmers as a full text search engine.  It is simple, highly configurable, lightweight and FAST.  Most elixir developers are used to the idea of a little learning early paying off later. Sphinx is like, exposing many search fundamentals that you should know even if more interested in elastic search.  And yet Sphinx remains easy to use, has great default settings and many options for scale.  Most of all it is enjoyable and can tank a server fire without going down.
 
-This project wraps the older Giza project's erlang calls with Elixir calls and mappings. As implementing newer Sphinx features, Elixir will start to take over as the primary language of interaction with Sphinx protocol.
+This project wraps the older Giza project's erlang calls with Elixir calls and mappings. As implementing newer Sphinx features, Elixir will start to take over as the primary language of interaction with Sphinx protocol.  All of the original Erlang calls are also still available via :giza_query, :giza_response etc.
 
 
 ## Installation
