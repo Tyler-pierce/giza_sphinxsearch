@@ -1,12 +1,11 @@
 defmodule Giza do
-
-  alias Giza.{Query, Request}
-
   @moduledoc """
   Giza Sphinx Search client. The Giza core class provides wrapping to make using Sphinx easy in the typical infrastructure of an
   elixir application.  Any Giza functionality is easiest to use when started by piping a request starting
   here. All functionality is available through Giza.Query, Giza.Request etc..
   """
+
+  alias Giza.{Query, Request}
 
   @doc """
   Create a query based on the supplied index(es) and search phrase.  This is the easiest way to start building a query to Sphinx and

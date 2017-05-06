@@ -1,9 +1,9 @@
 defmodule Giza.Query do
-	defexception message: "query building error"
-
 	@moduledoc """
 	Query building helper functions. Add customizations such as limits and phrase weighting to your queries.
 	"""
+	
+	defexception message: "query building error"
 
 	@doc """
 	Build a new default query against the passed index and phrase

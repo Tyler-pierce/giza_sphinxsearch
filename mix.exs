@@ -46,7 +46,7 @@ defmodule Giza.Mixfile do
   defp package do
     [name: :giza_sphinxsearch,
      description: "Sphinx Client for Elixir",
-     files: ["lib", "giza_erlang", "mix.exs", "README", "LICENSE*"],
+     files: ["lib", "giza_erlang", "mix.exs", "README.md"],
      maintainers: ["Tyler Pierce"],
      licenses: ["Apache 2.0"],
      links: %{"GitHub" => "https://github.com/Tyler-pierce/giza_sphinxsearch"},

@@ -62,3 +62,4 @@ Giza.query('blog_index', 'subetei the swift')
 
 ## Documentation
 
+https://hexdocs.pm/giza_sphinxsearch/0.0.1
