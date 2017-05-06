@@ -31,7 +31,7 @@ defmodule Giza.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [{:ex_doc, "~> 0.14", only: :dev, runtime: false}]
   end
 
   defp description do
@@ -45,6 +45,7 @@ defmodule Giza.Mixfile do
 
   defp package do
     [name: :giza_sphinxsearch,
+     description: "Sphinx Client for Elixir",
      files: ["lib", "giza_erlang", "mix.exs", "README", "LICENSE*"],
      maintainers: ["Tyler Pierce"],
      licenses: ["Apache 2.0"],
