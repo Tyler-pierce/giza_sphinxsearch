@@ -60,7 +60,7 @@ Giza.SphinxQL.new()
 ```
 Note for non-OTP apps the last line would be Giza.SphinxQL.send().
 
-There are many examples in the documentation: https://hexdocs.pm/giza_sphinxsearch/api-reference.html
+There are many examples in the documentation: https://hexdocs.pm/giza_sphinxsearch/0.1.0
 
 
 ### Native protocol
@@ -95,11 +95,15 @@ Giza.query('blog_index', 'subetei the swift')
     }
 ```
 
+https://hexdocs.pm/giza_sphinxsearch/0.1.0/Giza.Query.html
+
+
 ### Sphinx HTTP REST API (experimental)
 
 This is simply there to support the infrastructure but not recommended for production use yet.  If you have sphinx 2.3.2+ installed feel free to try this out if you prefer to use HTTP for whichever reason.
 
-There are many examples in the documentation: https://hexdocs.pm/giza_sphinxsearch/api-reference.html
+More documentation and testing to follow.
+
 
 ## Documentation
 
