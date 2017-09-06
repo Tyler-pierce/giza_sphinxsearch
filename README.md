@@ -1,8 +1,6 @@
 Giza Sphinx Search
 ======
-Revived the old Giza erlang client for sphinx full text search, for Elixir. Sphinx is quality software and a great choice for elixir programmers as a full text search engine.  It is simple, highly configurable, lightweight and FAST.  Most elixir developers are used to the idea of a little learning early paying off later. Sphinx is like, exposing many search fundamentals that you should know even if more interested in elastic search.  And yet Sphinx remains easy to use, has great default settings and many options for scale.  Most of all it is enjoyable and can tank a server fire without going down.
-
-This project wraps the older Giza project's erlang calls with Elixir calls and mappings. As implementing newer Sphinx features, Elixir will start to take over as the primary language of interaction with Sphinx protocol.  All of the original Erlang calls are also still available via :giza_query, :giza_response etc.
+A client for Sphinx Search engine for Elixir.  Sphinx is a fast, robust and highly customizable search solution.  This client now supports all of it's functionality and connection methods and can be used in an OTP application.
 
 
 ## Installation
@@ -11,19 +9,14 @@ Add `giza_sphinxsearch` to your list of dependencies in `mix.exs` and add to you
 
 ```elixir
 def deps do
-  [{:giza_sphinxsearch, "~> 0.0.1"}]
-end
-```
-
-```elixir
-def application do
-  [applications: [..., :giza_sphinxsearch]]
+  [{:giza_sphinxsearch, "~> 0.1.0"}]
 end
 ```
 
 ## Settings
 
-Giza wants to know where your sphinx host is and what port to use.  It will default to localhost and 9312.
+Giza wants to know where your sphinx host is and what port to use.  It will default to localhost and 9312/9308/9306. Only the ports of the connection
+methods you wish to use should be defined.  The defaults are a common setup and most people will only need configure their production host.
 
 ```elixir
   config :giza_sphinxsearch,
@@ -31,7 +24,50 @@ Giza wants to know where your sphinx host is and what port to use.  It will defa
   	port: 9312
 ```
 
-## Examples
+### Phoenix Setup Example
+
+In your application.ex file add the Giza supervisor to query Giza (note this setup is not unique to Phoenix and works with most OTP setups):
+
+```elixir
+...
+children = [
+      ...
+
+      supervisor(Giza.Endpoint, [Keyword.new([
+        {:host, Application.get_env(:giza_sphinxsearch, :host)},
+        {:port, Application.get_env(:giza_sphinxsearch, :port)},
+        {:sql_port, Application.get_env(:giza_sphinxsearch, :sql_port)}
+      ])])
+    ]
+...
+```
+Adding the sql port will initialize the Mariaex mysql client, which is used to query Sphinx using SphinxQL, the recommended way to query. All Sphinx functionality is available this way with the fastest possible client speed.
+
+
+## Querying Sphinx!
+
+### SphinxQL (Recommended)
+
+SphinxQL is the recommended engine to query with and supports all features. You can send a raw query or build a supported query using similar pipe friendly methods as Ecto.
+
+```elixir
+# Must have Sphinx beta 2.3.2 (or 3+ when released) to use suggest
+Giza.SphinxQL.new() 
+  |> Giza.SphinxQL.suggest('posts_index', 'splt')
+  |> Giza.Service.sphinxql_send()
+
+%SphinxqlResponse{fields: ['suggest', 'distance', 'docs'], matches: [['split', 1, 5]...]}
+```
+Note for non-OTP apps the last line would be Giza.SphinxQL.send().
+
+There are many examples in the documentation: https://hexdocs.pm/giza_sphinxsearch/api-reference.html
+
+
+### Native protocol
+
+The native protocol can be easy to use as well with Giza's helpers and provides your query meta all at once.  For most needs this works well; for query Suggestions (such as for autocomplete), you should use SphinxQL however.
+
+Examples:
 
 ```elixir
 Giza.query('blog_index', 'subetei the swift')
@@ -59,7 +95,12 @@ Giza.query('blog_index', 'subetei the swift')
     }
 ```
 
+### Sphinx HTTP REST API (experimental)
+
+This is simply there to support the infrastructure but not recommended for production use yet.  If you have sphinx 2.3.2+ installed feel free to try this out if you prefer to use HTTP for whichever reason.
+
+There are many examples in the documentation: https://hexdocs.pm/giza_sphinxsearch/api-reference.html
 
 ## Documentation
 
-https://hexdocs.pm/giza_sphinxsearch/0.0.1
+https://hexdocs.pm/giza_sphinxsearch/0.1.0

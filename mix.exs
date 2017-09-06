@@ -3,7 +3,7 @@ defmodule Giza.Mixfile do
 
   def project do
     [app: :giza_sphinxsearch,
-     version: "0.0.1",
+     version: "0.1.0",
      elixir: "~> 1.4",
      erlc_paths: ["giza_erlang"],
      build_embedded: Mix.env == :prod,
@@ -31,15 +31,15 @@ defmodule Giza.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:ex_doc, "~> 0.14", only: :dev, runtime: false}]
+    [{:ex_doc, "~> 0.14", only: :dev, runtime: false},
+     {:httpoison, "~> 0.13"},
+     {:mariaex, "~> 0.8.2"}]
   end
 
   defp description do
     """
-    Reviving the old Giza erlang client for sphinx full text search in Elixir. Sphinx is quality software 
-    and this writers preferred full text search engine.  It is simple, highly configurable, lightweight, robust
-    and FAST.  This project wraps the older Giza project's erlang calls and as implementing newer Sphinx features, 
-    will start to take over as a fully elixir based project.
+    Sphinx Search client based on Giza and updated for Elixir and OTP. Sphinx is simple, highly configurable, lightweight, robust
+    and FAST.  Now handles search suggestions for autocomplete and all 3 Sphinx query engines (SphinxQL, Native protocol, and HTTP API).
     """
   end
 

@@ -25,9 +25,9 @@
 -include("giza.hrl").
 -include("giza_internal.hrl").
 
--export([new/0, new/1, new/2]).
+-export([new/0, new/1, new/2, new/3]).
 -export([query_string/1, query_string/2]).
--export([host/1, host/2, port/1, port/2]).
+-export([host/1, host/2, port/1, port/2, http_port/1, http_port/2]).
 -export([index/1, index/2, limit/1, limit/2]).
 -export([offset/1, offset/2, min_id/1, min_id/2]).
 -export([max_id/1, max_id/2]).
@@ -75,6 +75,18 @@ new(Index, QueryString) when is_list(Index),
 new(QueryString) when is_list(QueryString) ->
   R = new_with_defaults(),
   query_string(R, QueryString).
+
+%% @spec new(Host, Port, HttpPort) -> Result
+%%       Host = string()
+%%       Port = integer()
+%%       HttpPort = integer()
+%%       Result = any()
+%% @doc Create a new giza query pointing to the given host and port
+new(Host, Port, HttpPort) when is_list(Host),
+                               is_integer(Port),
+                               is_integer(HttpPort) ->
+  R = new_with_defaults(),
+  R#giza_query{host=Host, port=Port, http_port=HttpPort}.
 
 %% @spec query_string(Query) -> Result
 %%       Query = any()
@@ -124,6 +136,21 @@ host(Query) ->
 %% @doc Set the target host
 host(Query, Host) when is_list(Host) ->
   set_query_field(host, Query, Host).
+
+%% @spec http_port(Query) -> Result
+%%       Query = any()
+%%       Result = string()
+%% @doc Get the current target port for http requests
+http_port(Query) ->
+  Query#giza_query.http_port.
+
+%% @spec http_port(Query, Host) -> Result
+%%       Query = any()
+%%       Host = string()
+%%       Result = any()
+%% @doc Set the target host
+http_port(Query, Port) when is_number(Port) ->
+  set_query_field(http_port, Query, Port).
 
 %% @spec port(Query) -> Result
 %%       Query = any()
@@ -381,6 +408,8 @@ set_query_field(host, Query, Host) ->
   Query#giza_query{host=Host};
 set_query_field(port, Query, Port) ->
   Query#giza_query{port=Port};
+set_query_field(http_port, Query, Port) ->
+  Query#giza_query{http_port=Port};
 set_query_field(limit, Query, Limit) ->
   Query#giza_query{limit=Limit};
 set_query_field(min_id, Query, MinId) ->
