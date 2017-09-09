@@ -1,4 +1,8 @@
 defmodule Giza.Service do
+  @moduledoc """
+  The Giza genserver worker.  Handles result calling that can be supervised and handled upon any issue or crash.  This should be the main
+  interface against which querying is done if choosing to start a worker.
+  """
   use GenServer
 
   ### GenServer
@@ -67,14 +71,24 @@ defmodule Giza.Service do
   end
 
   ### Client API / Helper functions
+
+  @doc """
+  Send a query using the native sphinx protocol
+  """
   def send(query) do 
     GenServer.call(__MODULE__, {:send, query})
   end
 
+  @doc """
+  Send a query using the Sphinx HTTP API (Experimental)
+  """
   def http_send(query) do
     GenServer.call(__MODULE__, {:http_send, query})
   end
 
+  @doc """
+  Send a query using SphinxQL (Recommended)
+  """
   def sphinxql_send(query) do
     GenServer.call(__MODULE__, {:sphinxql_send, query})
   end

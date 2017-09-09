@@ -1,6 +1,6 @@
 defmodule Giza.Request do
 	@moduledoc """
-	Send query to Sphinx Daemon and return a results syncronously.
+	Send query to Sphinx Daemon and return results syncronously using sphinx native protocol. Module could be removed/refactored soon.
 	"""
 
 	@doc """
