@@ -22,7 +22,7 @@ defmodule Giza.Query do
 			is_list(search_phrase) ->
 				search_phrase
 			true ->
-				raise Giza.Query, message: "Invalid search phrase found when building query. Use \"string\" or 'charlist'"
+				""
 		end
 
 		:giza_query.new(index, search)
