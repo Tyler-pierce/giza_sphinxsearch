@@ -107,4 +107,4 @@ More documentation and testing to follow.
 
 ## Documentation
 
-https://hexdocs.pm/giza_sphinxsearch/0.1.0
+https://hexdocs.pm/giza_sphinxsearch/0.1.1
