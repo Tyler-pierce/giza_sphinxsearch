@@ -7,7 +7,7 @@ defmodule Giza.SphinxQL do
 	through this method.
 	"""
 
-	alias Giza.Structs.{SphinxqlQuery, SphinxqlResponse}
+	alias Giza.Structs.{SphinxqlQuery, SphinxqlResponse, SphinxqlMeta}
 
 	@default_suggest_limit 5
 	@default_suggest_max_edits 4
@@ -161,6 +161,26 @@ defmodule Giza.SphinxQL do
 	end
 
 	@doc """
+	Return meta information about the latest query on the current client.  This is commonly used to retrieve the total returned
+	in that query and the total available without limit.  This information can be used for pagination
+
+	http://sphinxsearch.com/docs/devel.html#sphinxql-show-meta
+
+	## Examples
+
+		iex> Giza.SphinxQL.meta()
+
+			{:ok, %SphinxqlMeta{"total": 20, "total_found": 1000, "time": 0.0006, ...}
+	"""
+	def meta() do
+		{:ok, sphinxql_result} = %SphinxqlQuery{}
+			|> raw("SHOW META;")
+			|> send()
+
+		{:ok, meta_matches_to_map(sphinxql_result.matches, %SphinxqlMeta{})}
+	end
+
+	@doc """
 	Send a query to be executed after preprocessing of the SphinxqlQuery structure. Returns a tuple with :ok or :error and the error
 	message if applicable.
 
@@ -182,6 +202,14 @@ defmodule Giza.SphinxQL do
 			{:error, %{mariadb: %{message: message}}} ->
         		{:error, message}
 		end
+	end
+
+	defp meta_matches_to_map([], %SphinxqlMeta{} = map_acc) do
+		map_acc
+	end
+
+	defp meta_matches_to_map([[match_key, match_value]|tail], %SphinxqlMeta{} = map_acc) do
+		meta_matches_to_map(tail, %{map_acc | String.to_atom(match_key) => match_value})
 	end
 
 	defp query_to_string(query) do
