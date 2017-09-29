@@ -7,7 +7,7 @@ defmodule Giza.SphinxQL do
 	through this method.
 	"""
 
-	alias Giza.Structs.{SphinxqlQuery, SphinxqlResponse, SphinxqlMeta}
+	alias Giza.Structs.{SphinxqlQuery, SphinxqlResponse}
 
 	@default_suggest_limit 5
 	@default_suggest_max_edits 4
@@ -177,7 +177,7 @@ defmodule Giza.SphinxQL do
 			|> raw("SHOW META;")
 			|> send()
 
-		{:ok, meta_matches_to_map(sphinxql_result.matches, %SphinxqlMeta{})}
+		{:ok, meta_matches_to_map(sphinxql_result.matches, %{})}
 	end
 
 	@doc """
@@ -204,11 +204,11 @@ defmodule Giza.SphinxQL do
 		end
 	end
 
-	defp meta_matches_to_map([], %SphinxqlMeta{} = map_acc) do
+	defp meta_matches_to_map([], %{} = map_acc) do
 		map_acc
 	end
 
-	defp meta_matches_to_map([[match_key, match_value]|tail], %SphinxqlMeta{} = map_acc) do
+	defp meta_matches_to_map([[match_key, match_value]|tail], %{} = map_acc) do
 		meta_matches_to_map(tail, %{map_acc | String.to_atom(match_key) => match_value})
 	end
 
