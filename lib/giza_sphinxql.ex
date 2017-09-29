@@ -209,7 +209,7 @@ defmodule Giza.SphinxQL do
 	end
 
 	defp meta_matches_to_map([[match_key, match_value]|tail], %{} = map_acc) do
-		meta_matches_to_map(tail, %{map_acc | String.to_atom(match_key) => match_value})
+		meta_matches_to_map(tail, Map.put(map_acc, String.to_atom(match_key), match_value))
 	end
 
 	defp query_to_string(query) do
