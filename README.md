@@ -9,7 +9,7 @@ Add `giza_sphinxsearch` to your list of dependencies in `mix.exs` and add to you
 
 ```elixir
 def deps do
-  [{:giza_sphinxsearch, "~> 0.1.0"}]
+  [{:giza_sphinxsearch, "~> 0.1.4"}]
 end
 ```
 
@@ -60,7 +60,7 @@ Giza.SphinxQL.new()
 ```
 Note for non-OTP apps the last line would be Giza.SphinxQL.send().
 
-There are many examples in the documentation: https://hexdocs.pm/giza_sphinxsearch/0.1.0
+There are many examples in the documentation: https://hexdocs.pm/giza_sphinxsearch/0.1.4
 
 
 ### Native protocol
