@@ -2,6 +2,8 @@ Giza Sphinx Search
 ======
 A client for Sphinx Search engine for Elixir.  Sphinx is a fast, robust and highly customizable search solution.  This client now supports all of it's functionality and connection methods and can be used in an OTP application.
 
+More usage examples are in the [https://hexdocs.pm/giza_sphinxsearch/Giza.SphinxQL.html#functions](documentation).
+
 
 ## Installation
 
@@ -13,7 +15,11 @@ def deps do
 end
 ```
 
-## Settings
+```elixir
+> mix deps.get
+```
+
+## Usage Settings
 
 Giza wants to know where your sphinx host is and what port to use.  It will default to localhost and 9312/9308/9306. Only the ports of the connection
 methods you wish to use should be defined.  The defaults are a common setup and most people will only need configure their production host.
@@ -21,8 +27,11 @@ methods you wish to use should be defined.  The defaults are a common setup and 
 ```elixir
   config :giza_sphinxsearch,
   	host: 'localhost',
-  	port: 9312
+    sql_port: 9306
 ```
+
+If you wish to add to your supervision tree (recommended) follow the phoenix setup instructions below, which will work for any elixir application.  
+
 
 ### Phoenix Setup Example
 
@@ -41,7 +50,7 @@ children = [
     ]
 ...
 ```
-Adding the sql port will initialize the Mariaex mysql client, which is used to query Sphinx using SphinxQL, the recommended way to query. All Sphinx functionality is available this way with the fastest possible client speed.
+Adding the sql port will initialize the Mariaex mysql client, which is used to query Sphinx using SphinxQL, the recommended way to query. All Sphinx functionality is available this way with the fastest possible client speed. Any port setting is optional where `port` is the native sphinx protocol over tcp. `http_port` can also be used and is well supported by this client but considered alpha and will be tested more if demand arises, and it's default is 9308.
 
 
 ## Querying Sphinx!
@@ -52,15 +61,33 @@ SphinxQL is the recommended engine to query with and supports all features. You 
 
 ```elixir
 # Must have Sphinx beta 2.3.2 (or 3+ when released) to use suggest
-Giza.SphinxQL.new() 
-  |> Giza.SphinxQL.suggest('posts_index', 'splt')
+alias Giza.SphinxQL
+
+SphinxQL.new() 
+  |> SphinxQL.suggest('posts_index', 'splt')
   |> Giza.Service.sphinxql_send()
 
 %SphinxqlResponse{fields: ['suggest', 'distance', 'docs'], matches: [['split', 1, 5]...]}
 ```
-Note for non-OTP apps the last line would be Giza.SphinxQL.send().
 
-There are many examples in the documentation: https://hexdocs.pm/giza_sphinxsearch/0.1.4
+```elixir
+SphinxQL.new()
+  |> SphinxQL.from("posts")
+  |> SphinxQL.match('tengri')
+
+%SphinxqlResponse{ .. }
+```
+
+```elixir
+SphinxQL.new()
+  |> SphinxQL.raw("SELECT id, WEIGHT() as w FROM posts_index WHERE MATCH('subetei the swift')")
+
+%SphinxqlResponse{ .. }
+```
+
+Note if not using Giza in your application supervision tree the last line would be Giza.SphinxQL.send().  
+
+There are more examples in the documentation.
 
 
 ### Native protocol
@@ -107,4 +134,4 @@ More documentation and testing to follow.
 
 ## Documentation
 
-https://hexdocs.pm/giza_sphinxsearch/0.1.1
+https://hexdocs.pm/giza_sphinxsearch/Giza.SphinxQL.html#functions
