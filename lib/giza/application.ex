@@ -1,7 +1,6 @@
 defmodule Giza.Application do
-	@moduledoc """
-	Supervisor for using Giza in an OTP application.  Supervises the Giza worker and Maria SQL client for SphinxQL.
-	"""
+	@moduledoc false
+
 	use Supervisor
 
 	def start_link(opts) do
