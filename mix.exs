@@ -3,7 +3,7 @@ defmodule Giza.Mixfile do
 
   def project do
     [app: :giza_sphinxsearch,
-     version: "0.1.4",
+     version: "1.0.0",
      elixir: "~> 1.4",
      erlc_paths: ["giza_erlang"],
      build_embedded: Mix.env == :prod,
@@ -36,20 +36,24 @@ defmodule Giza.Mixfile do
      {:mariaex, "~> 0.8.2"}]
   end
 
-  defp description do
+  defp description() do
     """
-    Sphinx Search client based on Giza and updated for Elixir and OTP. Sphinx is simple, highly configurable, lightweight, robust
-    and FAST.  Now handles search suggestions for autocomplete and all 3 Sphinx query engines (SphinxQL, Native protocol, and HTTP API).
+    Giza: Sphinx Search client for Elixir. Sphinx is a simple, highly configurable, lightweight, robust
+    and FAST search indexer and daemon.  Feature rich: distributed index, search suggestions, real time index,
+    much more. Giza also supports the Manticore fork.
     """
   end
 
   defp package do
     [name: :giza_sphinxsearch,
-     description: "Sphinx Client for Elixir",
-     files: ["lib", "giza_erlang", "mix.exs", "README.md"],
+     description: "Giza: Sphinx Client for Elixir",
+     files: ["lib", "giza_erlang", "sphinx", "mix.exs", "README.md"],
      maintainers: ["Tyler Pierce"],
      licenses: ["Apache 2.0"],
-     links: %{"GitHub" => "https://github.com/Tyler-pierce/giza_sphinxsearch"},
+     links: %{
+      "GitHub" => "https://github.com/Tyler-pierce/giza_sphinxsearch", 
+      "Sphinx Search" => "http://sphinxsearch.com/",
+      "Manticore Search" => "https://manticoresearch.com/"},
      source_url: "https://github.com/Tyler-pierce/giza_sphinxsearch"]
   end
 end
