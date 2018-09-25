@@ -4,7 +4,7 @@ Elixir implementation of the Sphinx Search engine client. Sphinx is a (very) fas
 
 Read the full [docs for many usage examples](https://hexdocs.pm/giza_sphinxsearch/Giza.html#content).
 
-**NEW:** 1.0 released. With cleaned up interface, documentation, concurrency model and easy configuration.  To upgrade
+**NEW:** 1.0.1 released. With cleaned up interface, documentation, concurrency model and easy configuration.  To upgrade
 from 0.1.4 update your application file with the new simpler Giza.Application as shown below.
 
 
@@ -14,7 +14,7 @@ Add `giza_sphinxsearch` to your list of dependencies in `mix.exs` and add to you
 
 ```elixir
 def deps do
-  [{:giza_sphinxsearch, "~> 1.0.0"}]
+  [{:giza_sphinxsearch, "~> 1.0.1"}]
 end
 ```
 

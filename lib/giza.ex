@@ -13,7 +13,7 @@ defmodule Giza do
   1) Add Giza to dependencies (in mix.exs)
 
       def deps do
-        [{:giza_sphinxsearch, "~> 1.0.0"},
+        [{:giza_sphinxsearch, "~> 1.0.1"},
          ...]
       end
 
