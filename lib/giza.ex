@@ -34,10 +34,11 @@ defmodule Giza do
       # Config file will appear in sphinx/sphinx.conf
       > mix giza.sphinx.config
 
-  5) Run the index
+  5) Run the index and start the search daemon
 
       > mix giza.sphinx.index
       > (Output shown: check for any issues in your indices!)
+      > mix.giza.sphinx.searchd
 
   Now you can use the examples below and throughout the documentation in your code!
 
