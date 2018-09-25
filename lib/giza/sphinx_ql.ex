@@ -59,9 +59,9 @@ defmodule Giza.SphinxQL do
 
 	## Examples
 
-		iex> Giza.SphinxQL.new() |> Giza.SphinxQL.suggest('sbetei', 'posts_index', [limit: 3, max_edits: 4])
+		iex> Giza.SphinxQL.new() |> Giza.SphinxQL.suggest("sbetei", "posts_index", [limit: 3, max_edits: 4])
 	"""
-	def suggest(%SphinxqlQuery{} = query, index, phrase, opts) when is_binary(index) do
+	def suggest(%SphinxqlQuery{} = query, index, phrase, opts \\ []) when is_binary(index) do
 		limit = cond do 
 			Keyword.has_key?(opts, :limit) ->
 				Keyword.get(opts, :limit)

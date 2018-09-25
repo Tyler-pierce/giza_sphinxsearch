@@ -55,10 +55,10 @@ method and is recommended for client speed as well.  Thus this is the officially
 alias Giza.SphinxQL
 
 SphinxQL.new() 
-  |> SphinxQL.suggest('posts_index', 'splt')
+  |> SphinxQL.suggest("posts_index", "splt")
   |> SphinxQL.send()
 
-%SphinxqlResponse{fields: ['suggest', 'distance', 'docs'], matches: [['split', 1, 5]...]}
+%SphinxqlResponse{fields: ["suggest", "distance", "docs"], matches: [["split", 1, 5]...]}
 ```
 
 ```elixir
@@ -115,7 +115,7 @@ Examples:
 ```elixir
 alias Giza.SphinxProtocol
 
-SphinxProtocol.query('blog_index', 'subetei the swift')
+SphinxProtocol.query("blog_index", "subetei the swift")
 |> SphinxProtocol.limit(5)
 |> SphinxProtocol.offset(5)
 |> SphinxProtocol.filter_exclude('user_age', 1, 17)

@@ -48,17 +48,17 @@ defmodule Giza do
       alias Giza.SphinxQL
 
       SphinxQL.new() 
-        |> SphinxQL.suggest('posts_index', 'splt')
+        |> SphinxQL.suggest("posts_index", "splt")
         |> SphinxQL.send()
 
-      %SphinxqlResponse{fields: ['suggest', 'distance', 'docs'], matches: [['split', 1, 5]...]}
+      %SphinxqlResponse{fields: ["suggest", "distance", "docs"], matches: [["split", 1, 5]...]}
 
 
   ## Example
 
       SphinxQL.new()
-      |> SphinxQL.from("posts")
-      |> SphinxQL.match('tengri')
+      |> SphinxQL.from("posts, posts_recent")
+      |> SphinxQL.match("tengri")
       |> SphinxQL.send()
       |> Giza.get_doc_ids()
 
