@@ -2,7 +2,7 @@ Giza: Sphinx Search Client
 ======
 Elixir implementation of the Sphinx Search engine client. Sphinx is a (very) fast, light, robust and highly customizable search solution. It's support for concurrency and reputable uptime keeps up with OTP beautifully. Giza supports all connection and querying methods Sphinx offers.
 
-Read the full [docs for many usage examples](https://hexdocs.pm/giza_sphinxsearch/Giza.SphinxQL.html#functions).
+Read the full [docs for many usage examples](https://hexdocs.pm/giza_sphinxsearch/Giza.html#content).
 
 **NEW:** 1.0 released. With cleaned up interface, documentation, concurrency model and easy configuration.  To upgrade
 from 0.1.4 update your application file with the new simpler Giza.Application as shown below.
@@ -152,7 +152,7 @@ https://hexdocs.pm/giza_sphinxsearch/Giza.Http.html#functions
 
 ## Documentation
 
-https://hexdocs.pm/giza_sphinxsearch/Giza.SphinxQL.html#functions
+https://hexdocs.pm/giza_sphinxsearch/Giza.html#content
 
 And to learn more about Sphinx from there excellent documentation:
 
