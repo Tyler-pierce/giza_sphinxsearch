@@ -1,11 +1,15 @@
 defmodule Mix.Tasks.Giza.Sphinx.Config do
-  @moduledoc """
-  Mix shortcut to running the Sphinx Indexer to build an index against the data source
-  """
   use Mix.Task
 
   @shortdoc "Generate a Sphinx Search Config file. Uses database credentials + sensible defaults"
 
+  @moduledoc """
+  Generate a Sphinx Search Config file. Uses database credentials + sensible defaults.
+
+  Please see Sphinx Docs for more information on your config options:
+
+  http://sphinxsearch.com/docs/current.html#conf-reference
+  """
 
   def run([db_app, db_repo]) do
     db_conf = Application.get_env(String.to_atom(db_app), String.to_atom("Elixir.#{db_repo}"))

@@ -3,7 +3,7 @@ defmodule Giza.Mixfile do
 
   def project do
     [app: :giza_sphinxsearch,
-     version: "1.0.1",
+     version: "1.0.2",
      elixir: "~> 1.5",
      erlc_paths: ["giza_erlang"],
      build_embedded: Mix.env == :prod,
@@ -38,7 +38,7 @@ defmodule Giza.Mixfile do
 
   defp description() do
     """
-    Giza: Sphinx Search client for Elixir. Sphinx is a simple, highly configurable, lightweight, robust
+    Giza: Sphinx Fulltext Search client for Elixir. Sphinx is a simple, highly configurable, lightweight, robust
     and FAST search indexer and daemon.  Feature rich: distributed index, search suggestions, real time index,
     much more. Giza also supports the Manticore fork.
     """

@@ -1,6 +1,6 @@
 Giza: Sphinx Search Client
 ======
-Elixir implementation of the Sphinx Search engine client. Sphinx is a (very) fast, light, robust and highly customizable search solution. It's support for concurrency and reputable uptime keeps up with OTP beautifully. Giza supports all connection and querying methods Sphinx offers.
+Elixir Client implementation of the Sphinx Fulltext Search Engine. Sphinx is a (very) fast, light, robust and highly customizable search solution. It's support for concurrency and reputable uptime keeps up with OTP beautifully. Giza supports all connection and querying methods Sphinx offers.
 
 Read the full [docs for many usage examples](https://hexdocs.pm/giza_sphinxsearch/Giza.html#content).
 
@@ -64,7 +64,7 @@ SphinxQL.new()
 ```elixir
 SphinxQL.new()
 |> SphinxQL.from("posts")
-|> SphinxQL.match('tengri')
+|> SphinxQL.match("tengri")
 |> SphinxQL.send()
 |> Giza.get_doc_ids()
 
@@ -78,6 +78,32 @@ SphinxQL.new()
 ```elixir
 SphinxQL.new()
 |> SphinxQL.raw("SELECT id, WEIGHT() as w FROM posts_index WHERE MATCH('subetei the swift')")
+|> SphinxQL.send()
+
+%SphinxqlResponse{ .. }
+```
+
+#### Recipes!
+
+The recipe library allows you to make use of complex sphinx queries pre-prepared by Giza.  The first such recipe made
+available is the ability to weigh your queries toward newer entries:
+
+```elixir
+SphinxQL.new()
+|> SphinxQL.from("posts")
+|> SphinxQL.match("tengri")
+|> SphinxQL.Recipe.weigh_by_date("last_updated_timestamp")
+|> SphinxQL.send()
+
+%SphinxqlResponse{ .. }
+```
+
+Here is one that helps you filter on your source attributes:
+
+```elixir
+SphinxQL.new()
+|> SphinxQL.from("blog_comments")
+|> SphinxQL.Recipe.match_and_filter("subetei", post_id: 1, depth: 2)
 |> SphinxQL.send()
 
 %SphinxqlResponse{ .. }

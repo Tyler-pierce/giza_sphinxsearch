@@ -118,21 +118,19 @@ defmodule Giza.SphinxQL do
 	end	
 
 	def match(%SphinxqlQuery{} = query, search_term) when is_binary(search_term) do
-		query_new = %{query | :where => "MATCH('" <> String.trim(search_term) <> "')"}
-		query_new
+		%{query | :where => "MATCH('" <> String.trim(search_term) <> "')"}
 	end
 
 	@doc """
 	Returns a SphinxQL query with a where clause added. A string representing the whole where part of your query
-	is the only accepted input.
+	is the only accepted input. Often used for filtering as =/IN/etc map directly to attribute filters.
 
 	## Examples
 
 		iex> Giza.SphinxQL.new() |> Giza.SphinxQL.where("MATCH('tengri') AND room = 'mongol lounge'")
 	"""
 	def where(%SphinxqlQuery{} = query, where) when is_binary(where) do
-		query_new = %{query | :where => String.trim(where)}
-		query_new
+		%{query | :where => String.trim(where)}
 	end
 
 	@doc """
@@ -149,7 +147,7 @@ defmodule Giza.SphinxQL do
 	end 
 
 	@doc """
-	Returns an api query augmented with a limit for amount of returned documents.  Only an integer is acceptable input. This
+	Returns a SphinxQL query augmented with a limit for amount of returned documents.  Only an integer is acceptable input. This
 	is normally used to support pagination.
 
 	## Examples
@@ -159,6 +157,18 @@ defmodule Giza.SphinxQL do
 	def offset(%SphinxqlQuery{} = query, offset) when is_integer(offset) do
 		query_new = %{query | :offset => offset}
 		query_new
+	end
+
+	@doc """
+	Returns a SphinxQL query with an option added such as used for the expression ranker
+
+	## Examples
+
+		iex> SphinxQL.new()
+		|> SphinxQL.option("ranker=expr('sum(lcs*user_weight)*1000+bm25'))")
+	"""
+	def option(%SphinxqlQuery{} = query, option) do
+		%{query | :option => option}
 	end
 
 	@doc """
@@ -221,7 +231,8 @@ defmodule Giza.SphinxQL do
 					query_to_string_call(query),
 					query_to_string_from(query),
 					query_to_string_where(query),
-					query_to_string_limit(query)
+					query_to_string_limit(query),
+					query_to_string_option(query)
 				]
 
 				query_list_to_string(query_part_list, nil)
@@ -262,6 +273,14 @@ defmodule Giza.SphinxQL do
 
 	defp query_to_string_limit(%SphinxqlQuery{limit: limit, offset: offset}) do
 		"LIMIT " <> Integer.to_string(offset) <> "," <> Integer.to_string(limit)
+	end
+
+	defp query_to_string_option(%SphinxqlQuery{option: nil}) do
+		nil
+	end
+
+	defp query_to_string_option(%SphinxqlQuery{option: option}) do
+		"OPTION " <> option
 	end
 
 	defp query_to_string_call(%SphinxqlQuery{call: nil}) do
