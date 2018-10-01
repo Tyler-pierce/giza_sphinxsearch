@@ -25,7 +25,8 @@ defmodule Giza.SphinxQL.Recipe do
 
   """
   def weigh_by_date(%SphinxqlQuery{} = query, timestamp_field \\ "updated_timestamp") when is_binary(timestamp_field) do
-    ranker = "ranker = expr('sum((extract(epoch FROM now()) - #{timestamp_field})/1000 + (lcs*user_weight))*1000+bm25')"
+    # Timestamp weight is likely to be around ~1000-2000
+    ranker = "ranker = expr('sum(#{timestamp_field} * 0.000001) + sum(lcs*user_weight)*1000 +bm25')"
 
     SphinxQL.option(query, ranker)
   end

@@ -166,9 +166,33 @@ defmodule Giza.SphinxQL do
 
 		iex> SphinxQL.new()
 		|> SphinxQL.option("ranker=expr('sum(lcs*user_weight)*1000+bm25'))")
+		|> SphinxQL.send()
+
+		%SphinxqlResponse{ .. }
 	"""
 	def option(%SphinxqlQuery{} = query, option) do
 		%{query | :option => option}
+	end
+
+	@doc """
+	Add an order by clause to return sorted by results.  Sphinx accepts a max of 5 order by attributes and
+	it's builtins are:
+		@id (match ID)
+		@weight (match weight)
+		@rank (match weight)
+		@relevance (match weight)
+		@random (return results in random order)
+
+	## Examples
+
+			iex> SphinxQL.new()
+			|> SphinxQL.order_by("@relevance DESC, updated_at DESC")
+			|> SphinxQL.send()
+
+			%SphinxqlResponse{ .. }
+	"""
+	def order_by(%SphinxqlQuery{} = query, order_by) do
+		%{query | :order_by => order_by}
 	end
 
 	@doc """
@@ -231,6 +255,7 @@ defmodule Giza.SphinxQL do
 					query_to_string_call(query),
 					query_to_string_from(query),
 					query_to_string_where(query),
+					query_to_string_order_by(query),
 					query_to_string_limit(query),
 					query_to_string_option(query)
 				]
@@ -273,6 +298,14 @@ defmodule Giza.SphinxQL do
 
 	defp query_to_string_limit(%SphinxqlQuery{limit: limit, offset: offset}) do
 		"LIMIT " <> Integer.to_string(offset) <> "," <> Integer.to_string(limit)
+	end
+
+	defp query_to_string_order_by(%SphinxqlQuery{order_by: nil}) do
+		nil
+	end 
+
+	defp query_to_string_order_by(%SphinxqlQuery{order_by: order_by}) do
+		"ORDER BY " <> order_by
 	end
 
 	defp query_to_string_option(%SphinxqlQuery{option: nil}) do
