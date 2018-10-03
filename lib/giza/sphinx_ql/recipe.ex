@@ -36,9 +36,10 @@ defmodule Giza.SphinxQL.Recipe do
 
   ## Example
 
+      # Show comments for a particular post only by a certain author
       iex> SphinxQL.new()
       |> SphinxQL.from("blog_comments")
-      |> SphinxQL.Recipe.match_and_filter("subetei", post_id: 1, depth: 2)
+      |> SphinxQL.Recipe.match_and_filter("subetei", post_id: 45, author: "Khasar Borjigin")
       |> SphinxQL.send()
 
       %SphinxqlResponse{ .. }
@@ -52,12 +53,17 @@ defmodule Giza.SphinxQL.Recipe do
   defp build_filter_string([], acc), do: Enum.join(acc, " AND ")
 
   defp build_filter_string([{field, filter}|filters], acc) when is_integer(filter) do
-    field = Atom.to_string(field)
+    field = get_field_filter(field)
 
     build_filter_string(filters, ["#{field} = #{filter}"|acc])
   end
 
   defp build_filter_string([{field, filter}|filters], acc) when is_binary(filter) do
+    field = get_field_filter(field)
+    
     build_filter_string(filters, ["#{field} = '#{filter}'"|acc])
   end
+
+  defp get_field_filter(field) when is_atom(field), do: Atom.to_string(field)
+  defp get_field_filter(field) when is_binary(field), do: field
 end
