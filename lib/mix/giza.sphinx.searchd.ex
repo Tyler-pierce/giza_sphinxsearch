@@ -10,16 +10,8 @@ defmodule Mix.Tasks.Giza.Sphinx.Searchd do
   def run([]) do
     {result, _} = System.cmd("searchd", ["-c", "sphinx/sphinx.conf"])
 
-    print_command_result(result)
+    Mix.shell.info result
 
     Mix.shell.info "Searchd run"
-  end
-
-  defp print_command_result(result) do
-    results = String.split(result, "\n")
-
-    for result <- results do
-      IO.inspect result
-    end
   end
 end

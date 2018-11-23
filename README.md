@@ -132,6 +132,11 @@ Starts the search daemon.. after this you are running Sphinx or Manticore with y
 mix giza.sphinx.searchd
 ```
 
+Run a query over the sql protocol
+```elixir
+mix giza.sphinx.query "SELECT * FROM i_blog WHERE MATCH('miranda')"
+```
+
 ### Native protocol
 
 The native protocol can be easy to use as well with Giza's helpers and provides your query meta all at once.  For most needs this works well; for some features like Search Suggestions (such as for autocomplete), you should use SphinxQL. Credit goes to the original Giza author for the Erlang client, as we still route these requests through that code. We wrap the returned value in a more convenient Map.
@@ -187,3 +192,9 @@ http://sphinxsearch.com/docs/current.html
 And to learn more about the recent Sphinx fork Manticore:
 
 https://docs.manticoresearch.com/latest/html/
+
+## Upcoming Development
+
+- Do something about error messages from Maria client (they aren't currently easy to handle/read in Giza)
+
+- Create the ability to download and run the sphinx binary locally so the project can be setup immediately via mix

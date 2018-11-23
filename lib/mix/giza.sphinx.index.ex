@@ -44,16 +44,8 @@ defmodule Mix.Tasks.Giza.Sphinx.Index do
   defp run_command(options) do
     {result, _} = System.cmd("indexer", options)
 
-    print_command_result(result)
+    Mix.shell.info result
 
     Mix.shell.info "Indexing complete"
-  end
-
-  defp print_command_result(result) do
-    results = String.split(result, "\n")
-
-    for result <- results do
-      IO.inspect result
-    end
   end
 end
