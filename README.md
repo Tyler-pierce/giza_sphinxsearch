@@ -14,7 +14,7 @@ Add `giza_sphinxsearch` to your list of dependencies in `mix.exs` and add to you
 
 ```elixir
 def deps do
-  [{:giza_sphinxsearch, "~> 1.0.4"}]
+  [{:giza_sphinxsearch, "~> 1.0"}]
 end
 ```
 
