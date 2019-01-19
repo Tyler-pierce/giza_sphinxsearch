@@ -3,7 +3,7 @@ defmodule Giza.Mixfile do
 
   def project do
     [app: :giza_sphinxsearch,
-     version: "1.0.5",
+     version: "1.0.6",
      elixir: "~> 1.5",
      erlc_paths: ["giza_erlang"],
      build_embedded: Mix.env == :prod,
@@ -33,7 +33,7 @@ defmodule Giza.Mixfile do
   defp deps do
     [{:ex_doc, "~> 0.16", only: :dev, runtime: false},
      {:httpoison, "~> 1.3"},
-     {:mariaex, "~> 0.8.2"}]
+     {:mariaex, "~> 0.9"}]
   end
 
   defp description() do
