@@ -181,6 +181,10 @@ defmodule Mix.Tasks.Giza.Sphinx.Config do
     get_db_conf_map(db_conf, Map.put(acc, :type, "mysql"))
   end
 
+  defp get_db_conf_map([{:adapter, Ecto.Adapters.MyXQL}|db_conf], %{} = acc) do
+    get_db_conf_map(db_conf, Map.put(acc, :type, "mysql"))
+  end
+
   defp get_db_conf_map([_|db_conf], %{} = acc) do
     get_db_conf_map(db_conf, acc)
   end
