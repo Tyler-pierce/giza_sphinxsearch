@@ -14,6 +14,7 @@ defmodule Giza.Application do
 		  name: :mysql_sphinx_client, 
 		  hostname: Application.get_env(:giza_sphinxsearch, :host, "localhost"), 
 		  port: Application.get_env(:giza_sphinxsearch, :sql_port, 9306), 
+		  username: "",
 		  skip_database: true,
 		  sock_type: :tcp
 		}
