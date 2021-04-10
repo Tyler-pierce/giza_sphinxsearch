@@ -235,7 +235,9 @@ defmodule Giza.SphinxQL do
 			{:ok, %{columns: columns, rows: rows, num_rows: num_rows}} ->
 				{:ok, %SphinxqlResponse{matches: rows, fields: columns, total: num_rows}}
 			{:error, %{mariadb: %{message: message}}} ->
-        {:error, message}
+        		{:error, message}
+        	{:error, %{message: message}} ->
+        		{:error, message}
 		end
 	end
 
