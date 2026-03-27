@@ -31,9 +31,11 @@ defmodule Giza.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:ex_doc, "~> 0.16", only: :dev, runtime: false},
-     {:httpoison, "~> 1.3"},
-     {:mariaex, "~> 0.9"}]
+    [
+      {:ex_doc, "~> 0.16", only: :dev, runtime: false},
+      {:req, "~> 0.5"},
+      {:mariaex, "~> 0.9"}
+    ]
   end
 
   defp description() do

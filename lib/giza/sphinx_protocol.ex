@@ -58,14 +58,15 @@ defmodule Giza.SphinxProtocol do
 			"", 0, "@group desc", "test", [], 0, [], [], 0}
 	"""
 	def new(index, search_phrase) do
-		search = cond do 
-			String.valid?(search_phrase) ->
-				to_charlist search_phrase
-			is_list(search_phrase) ->
-				search_phrase
-			true ->
-				""
-		end
+		search = 
+      cond do 
+			  String.valid?(search_phrase) ->
+			 	  to_charlist search_phrase
+			  is_list(search_phrase) ->
+				  search_phrase
+			  true ->
+				  ""
+		  end
 
 		:giza_query.new(index, search)
 	end
@@ -83,7 +84,8 @@ defmodule Giza.SphinxProtocol do
     "", 0, "@group desc", "test", [], 0, [], [], 0}
   """
   def query(index, search_phrase) do
-    new(index, search_phrase)
+    index
+    |> new(search_phrase)
     |> connection()
   end
 
@@ -98,12 +100,14 @@ defmodule Giza.SphinxProtocol do
 			"", 0, "@group desc", "test", [], 0, [], [], 0}
 	"""
 	def connection(query) do
-  	:giza_query.host(query, Application.get_env(:giza_sphinxsearch, :host))
+  	query
+    |> :giza_query.host(Application.get_env(:giza_sphinxsearch, :host))
   	|> :giza_query.port(Application.get_env(:giza_sphinxsearch, :port))
   end
 
   def connection(query, host, port) do
-  	:giza_query.host(query, host)
+  	query
+    |> :giza_query.host(host)
   	|> :giza_query.port(port)
   end
 

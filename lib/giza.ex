@@ -1,11 +1,11 @@
 defmodule Giza do
   @moduledoc ~S"""
-  Client for Sphinx Search, the search product built by the legendary Andrew Aksyonoff.  Sphinx is 
-  a robust and FAST database indexer and search daemon that can process large amounts of concurrent 
-  through-put.  Giza aims to make implementing Sphinx in your Elixir apps quick and simple.  Check
-  out the examples below for most use cases and dive deeper if need be through the docs. The github
-  docs take an Elixir perspective approach.  This doc here will get you up and running with Sphinx
-  and Elixir.
+  Client for Sphinx/Manticore Search, the search originally built by Andrew Aksyonoff and continued
+  by the Sphinx and Manticore teams. 
+
+  Sphinx is a robust and fast database indexer and search daemon that can process large amounts of
+  concurrent through-put.  Giza aims to make implementing Sphinx in your Elixir apps quick and simple. 
+  See examples below for most use cases and dive deeper if need be through the docs.
 
   ## Example
   Let's integrate into a Phoenix App.
@@ -77,7 +77,7 @@ defmodule Giza do
 
       %SphinxqlResponse{ .. }  
   """
-
+  alias Giza.QueryBuilder
   alias Giza.Structs.SphinxqlResponse
 
   @doc """
@@ -133,6 +133,41 @@ defmodule Giza do
 
   def result_tuple_to_map(result) do
     parse_result(result)
+  end
+
+  @doc """
+  Send a composed query to Sphinx/Manticore & return a result
+
+  ## Examples
+
+    iex> ManticoreQL.new()
+      |> ManticoreQL.select(["id", "title", "knn_dist()"])
+      |> ManticoreQL.from("articles")
+      |> ManticoreQL.knn("embedding", 5, [0.1, 0.2, 0.3, 0.4])
+      |> Giza.send()
+
+    {:ok, %SphinxqlResponse{matches: [..], total: 100, ..}}
+  """
+  def send(%SphinxqlQuery{} = query) do
+    query
+    |> case do
+         %{raw: nil} -> QueryBuilder.query_to_string(query)
+         %{raw: raw_query} -> raw_query
+       end
+    |> run_query()
+  end
+
+  # PRIVATE FUNCTIONS
+  ###################
+  defp run_query(query_string) do
+    case Mariaex.query(:mysql_sphinx_client, query_string, [], [query_type: :text]) do
+      {:ok, %{columns: columns, rows: rows, num_rows: num_rows}} ->
+        {:ok, %SphinxqlResponse{matches: rows, fields: columns, total: num_rows}}
+      {:error, %{mariadb: %{message: message}}} ->
+        {:error, message}
+      {:error, %{message: message}} ->
+        {:error, message}
+    end
   end
 
   defp get_doc_ids([], accum) do

@@ -1,8 +1,11 @@
 defmodule Giza.Service do
   @moduledoc """
-  The Giza genserver worker.  Handles result calling that can be supervised and handled upon any issue or crash. Note that multiple
-  workers would be needed for concurrency.  Avoid using this service if your requests are already concurrent and you don't
-  want to set up multiple service workers, as Sphinx can handle many concurrent requests and bottlenecks should be avoided.
+  The Giza genserver worker.  Handles result calling that can be supervised and handled upon any issue or crash. 
+  Note that multiple workers would be needed for concurrency.  Avoid using this service if your requests are 
+  already concurrent and you don't want to set up multiple service workers, as Sphinx can handle many concurrent 
+  requests and bottlenecks should be avoided.
+
+  This is mainly a placeholder for future functionality
   """
   use GenServer
 
@@ -21,14 +24,8 @@ defmodule Giza.Service do
   Start http service and initialize sphinx with connection options that will be used in every query
   """
   def init(_) do
-    _ = case Code.ensure_loaded(HTTPoison) do
-      {:module, poison} ->
-        poison.start()
-      _ ->
-        false
-    end
-
-    giza_query_default_state = :giza_query.new() 
+    giza_query_default_state =
+      :giza_query.new()
       |> :giza_query.host(Application.get_env(:giza_sphinxsearch, :host, "localhost"))
       |> :giza_query.http_port(Application.get_env(:giza_sphinxsearch, :http_port, 9308))
       |> :giza_query.port(Application.get_env(:giza_sphinxsearch, :port, 9312))
@@ -42,8 +39,12 @@ defmodule Giza.Service do
   Handle request to query Sphinx via Sphinx protocol directly
   """
   def handle_call({:protocol_send, query}, _from, query_state) do
-    result = query
-      |> SphinxProtocol.connection(:giza_query.host(query_state), :giza_query.port(query_state))
+    result = 
+      query
+      |> SphinxProtocol.connection(
+        :giza_query.host(query_state),
+        :giza_query.port(query_state)
+      )
       |> SphinxProtocol.send()
 
     case result do
@@ -62,7 +63,7 @@ defmodule Giza.Service do
   def handle_call({:http_send, query}, _from, query_state) do
     url = "http://" <> :giza_query.host(query_state) <> ":" <> :giza_query.http_port(query_state) <> "/"
 
-    result = HTTPoison.post url, "{\"body\": \"" <> query <> "\"}", [{"Content-Type", "application/json"}]
+    result = Req.post(url, body: "{\"body\": \"" <> query <> "\"}", headers: [{"content-type", "application/json"}])
 
     {:reply, result, query_state}
   end
