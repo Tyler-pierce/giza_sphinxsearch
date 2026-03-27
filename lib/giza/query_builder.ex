@@ -3,6 +3,8 @@ defmodule Giza.QueryBuilder do
   Helper for building up the SphinxQLQuery struct
   """
 
+  alias Giza.Structs.SphinxqlQuery
+
   def query_to_string(%SphinxqlQuery{call: nil} = query) do
     [
       query_to_string_select(query),

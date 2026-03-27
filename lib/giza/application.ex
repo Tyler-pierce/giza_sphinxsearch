@@ -8,10 +8,10 @@ defmodule Giza.Application do
   end
 
   def init(opts) do
-    workers = get_workers(opts, Keyword.get(opts, :workers, []), [])
+    workers = []
 
     sql_client =
-      {Mariaex,
+      {MyXQL,
        name: :mysql_sphinx_client,
        hostname: Application.get_env(:giza_sphinxsearch, :host, "localhost"),
        port: Application.get_env(:giza_sphinxsearch, :sql_port, 9306),

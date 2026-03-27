@@ -149,6 +149,22 @@ defmodule ManticoreQL do
 
   # PRIVATE FUNCTIONS
   ###################
+  defp run_query(query_string) do
+    alias Giza.Structs.SphinxqlResponse
+    adapter = Application.get_env(:giza_sphinxsearch, :query_adapter, Giza.QueryAdapter.MyXQL)
+
+    case adapter.execute(query_string) do
+      {:ok, %{columns: columns, rows: rows, num_rows: num_rows}} ->
+        {:ok, %SphinxqlResponse{matches: rows, fields: columns, total: num_rows}}
+
+      {:error, %{mariadb: %{message: message}}} ->
+        {:error, message}
+
+      {:error, %{message: message}} ->
+        {:error, message}
+    end
+  end
+
   defp build_facet_string(expr, opts) do
     order = Keyword.get(opts, :order)
     limit = Keyword.get(opts, :limit)

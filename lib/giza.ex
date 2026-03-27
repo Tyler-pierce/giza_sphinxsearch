@@ -78,7 +78,7 @@ defmodule Giza do
       %SphinxqlResponse{ .. }  
   """
   alias Giza.QueryBuilder
-  alias Giza.Structs.SphinxqlResponse
+  alias Giza.Structs.{SphinxqlQuery, SphinxqlResponse}
 
   @doc """
   Takes a giza result from a search and returns a list of the document id's
@@ -160,7 +160,9 @@ defmodule Giza do
   # PRIVATE FUNCTIONS
   ###################
   defp run_query(query_string) do
-    case Mariaex.query(:mysql_sphinx_client, query_string, [], [query_type: :text]) do
+    adapter = Application.get_env(:giza_sphinxsearch, :query_adapter, Giza.QueryAdapter.MyXQL)
+
+    case adapter.execute(query_string) do
       {:ok, %{columns: columns, rows: rows, num_rows: num_rows}} ->
         {:ok, %SphinxqlResponse{matches: rows, fields: columns, total: num_rows}}
       {:error, %{mariadb: %{message: message}}} ->

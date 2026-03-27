@@ -6,7 +6,7 @@ defmodule SphinxQL do
 	sence in the search world and a few extras that only make sense in Sphinx's world. 100% of Sphinx' functionality is 
 	accessable through this method.
 	"""
-	alias Giza.Structs.{SphinxqlQuery, SphinxqlResponse}
+	alias Giza.Structs.SphinxqlQuery
 
 	@default_suggest_limit 5
 	@default_suggest_max_edits 4
@@ -198,7 +198,7 @@ defmodule SphinxQL do
 		{:ok, sphinxql_result} =
 			%SphinxqlQuery{}
 			|> raw("SHOW META;")
-			|> send()
+			|> Giza.send()
 
 		{:ok, meta_matches_to_map(sphinxql_result.matches, %{})}
 	end

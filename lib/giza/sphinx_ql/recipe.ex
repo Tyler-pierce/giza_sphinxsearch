@@ -4,8 +4,6 @@ defmodule Giza.SphinxQL.Recipe do
   trying to take advantage of advanced search functionality without having to know every nuance of sphinx'
   query language.
   """
-
-  alias Giza.SphinxQL
   alias Giza.Structs.SphinxqlQuery
 
   @doc """
@@ -24,11 +22,13 @@ defmodule Giza.SphinxQL.Recipe do
       %SphinxqlResponse{ .. }
 
   """
-  def weigh_by_date(%SphinxqlQuery{} = query, timestamp_field \\ "updated_timestamp") when is_binary(timestamp_field) do
+  def weigh_by_date(%SphinxqlQuery{} = query, timestamp_field \\ "updated_timestamp") 
+  when is_binary(timestamp_field) do
     # Timestamp weight is likely to be around ~1000-2000
-    ranker = "ranker = expr('sum(#{timestamp_field} * 0.000001) + sum(lcs*user_weight)*1000 +bm25')"
-
-    SphinxQL.option(query, ranker)
+    SphinxQL.option(
+      query,
+      "ranker = expr('sum(#{timestamp_field} * 0.000001) + sum(lcs*user_weight)*1000 +bm25')"
+    )
   end
 
   @doc """
