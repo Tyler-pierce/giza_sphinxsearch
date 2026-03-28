@@ -14,9 +14,7 @@ defmodule Giza.Http do
 
 		iex> Giza.http.new() |> ...
 	"""
-	def new() do
-		%HttpQuery{}
-	end
+	def new, do: %HttpQuery{}
 
 	@doc """
 	Return an api query augmented with a select statement. Either a string (binary) or list of fields

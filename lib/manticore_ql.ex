@@ -1,10 +1,11 @@
-defmodule ManticoreQL do
+defmodule Giza.ManticoreQL do
   @moduledoc """
   Query building helper functions for ManticoreQL. Manticore Search is a fork of Sphinx Search
   with active development and new features. This module delegates the standard query-composing
   interface to `ManticoreQL` and is the place to add Manticore-specific extensions.
   """
   alias Giza.Structs.{SphinxqlQuery, SphinxqlResponse}
+  alias Giza.SphinxQL
 
   # ---- Sphinx and Manticore Compatible ----
 

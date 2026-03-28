@@ -3,8 +3,8 @@ defmodule Giza.Mixfile do
 
   def project do
     [app: :giza_sphinxsearch,
-     version: "1.0.7",
-     elixir: "~> 1.5",
+     version: "2.0.0",
+     elixir: "~> 1.9",
      erlc_paths: ["giza_erlang"],
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -18,7 +18,7 @@ defmodule Giza.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
-    [extra_applications: [:logger]]
+    [extra_applications: [:logger], mod: {Giza.Application, []}]
   end
 
   # Dependencies can be Hex packages:
@@ -40,15 +40,15 @@ defmodule Giza.Mixfile do
 
   defp description() do
     """
-    Giza: Sphinx Fulltext Search client for Elixir. Sphinx is a simple, highly configurable, lightweight, robust
-    and FAST search indexer and daemon.  Feature rich: distributed index, search suggestions, real time index,
-    much more. Giza also supports the Manticore fork.
+    Giza: Sphinx & Manticore Fulltext Search client for Elixir. Sphinx is a simple, highly configurable, 
+    lightweight, robust and fast search service. Feature rich: vector search, distributed, sharding, 
+    percolated, search suggestions, real time index.
     """
   end
 
   defp package do
     [name: :giza_sphinxsearch,
-     description: "Giza: Sphinx Client for Elixir",
+     description: "Giza: Manticore Client for Elixir",
      files: ["lib", "giza_erlang", "sphinx", "mix.exs", "README.md"],
      maintainers: ["Tyler Pierce"],
      licenses: ["Apache 2.0"],

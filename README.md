@@ -1,12 +1,21 @@
 Giza: Sphinx Search Client
 ======
-Elixir Client implementation of the Sphinx Fulltext Search Engine. Sphinx is a (very) fast, light, robust and highly customizable search solution. It's support for concurrency and reputable uptime keeps up with OTP beautifully. Giza supports all connection and querying methods Sphinx offers.
+Elixir Client implementation of the Sphinx Fulltext Search Engine. Sphinx is a (very) fast, light, robust and highly customizable search solution. It's support for concurrency and reputable uptime pairs with OTP nicely.
 
 Read the full [docs for many usage examples](https://hexdocs.pm/giza_sphinxsearch/Giza.html#content).
 
-**NEW:** 1.0.1 released. With cleaned up interface, documentation, concurrency model and easy configuration.  To upgrade
-from 0.1.4 update your application file with the new simpler Giza.Application as shown below.
+Sphinx forked into Sphinxsearch and Manticore Search with each now having some separate functionality but sharing
+most core functionality. This library serves both and is designed to keep up with both, focused on the sql style
+querying interface.
 
+**NEW:** 2.0.0 released. Focused on real time tables and implementing Manticore specific functionality. Sphinx
+specific functions will come soon.
+
+  * Vector Search
+  * Real-time Tables
+  * Percolate Indexed Tables
+  * Clustering
+  * Distributed Tables
 
 ## Installation
 
@@ -14,7 +23,7 @@ Add `giza_sphinxsearch` to your list of dependencies in `mix.exs` and add to you
 
 ```elixir
 def deps do
-  [{:giza_sphinxsearch, "~> 1.0"}]
+  [{:giza_sphinxsearch, "~> 2.0"}]
 end
 ```
 
@@ -43,44 +52,49 @@ config :giza_sphinxsearch,
 ```
 
 
-## Querying Sphinx!
+## Querying Sphinx
 
-### SphinxQL (Recommended)
+### ManticoreQL (or SphinxQL)
 
 SphinxQL uses an SQL client to send requests to the Sphinx Daemon.  Giza exposes all Sphinx functionality through this
-method and is recommended for client speed as well.  Thus this is the officially supported querying for this library.
+method and is recommended for client speed as well.  This is the officially supported querying for this library.
 
 ```elixir
-# Must have Sphinx beta 2.3.2 (or 3+ when released) to use suggest
-alias Giza.SphinxQL
+iex> alias Giza.{SearchTable, ManticoreQL}
 
-SphinxQL.new() 
-  |> SphinxQL.suggest("posts_index", "splt")
-  |> SphinxQL.send()
+iex> SearchTables.create_table(
+       "test_table_3",
+       [{"title", "text"}, {"price", "uint"}, {"updated_at", "timestamp"}], 
+       fuzzy_match: true
+     )
+      
+{:ok, ..}
+
+iex> SearchTables.insert("test_table", ["title", "price", "updated_at"], ["test", 1, 123..])
+
+{:ok, ..}
+
+iex> ManticoreQL.new()
+     |> ManticoreQL.suggest("test_table", "tst") 
+     |> ManticoreQL.send!()
 
 %SphinxqlResponse{fields: ["suggest", "distance", "docs"], matches: [["split", 1, 5]...]}
-```
 
-```elixir
-SphinxQL.new()
-|> SphinxQL.from("posts")
-|> SphinxQL.match("tengri")
-|> SphinxQL.send()
-|> Giza.get_doc_ids()
+iex> result = ManticoreQL.new()
+              |> ManticoreQL.from("test_table")
+              |> ManticoreQL.match("te*")
+              |> Gize.send!()
 
-[1, 4, 6, 12, ..]
+%SphinxqlResponse{fields: ["id", "title", "price"], total: 1, matches: [[1444.., "test", 1]]
 
-{:ok, %{:total_found => last_query_total_found} = Giza.SphinxQL.meta()
+iex> Giza.ids!(result)
+[1444809278530519042]
 
-800
-```
+iex> SphinxQL.new()
+     |> SphinxQL.raw("SELECT id, WEIGHT() as w FROM test_table WHERE MATCH('test')")
+     |> SphinxQL.send()
 
-```elixir
-SphinxQL.new()
-|> SphinxQL.raw("SELECT id, WEIGHT() as w FROM posts_index WHERE MATCH('subetei the swift')")
-|> SphinxQL.send()
-
-%SphinxqlResponse{ .. }
+{:ok, %SphinxqlResponse{ .. }}
 ```
 
 #### Recipes!
@@ -89,11 +103,13 @@ The recipe library allows you to make use of complex sphinx queries pre-prepared
 available is the ability to weigh your queries toward newer entries:
 
 ```elixir
-SphinxQL.new()
-|> SphinxQL.from("posts")
-|> SphinxQL.match("tengri")
-|> SphinxQL.Recipe.weigh_by_date("last_updated_timestamp")
-|> SphinxQL.send()
+alias Giza.SphinxQL.Recipe
+
+iex> ManticoreQL.new()
+     |> ManticoreQL.from("posts")
+     |> ManticoreQL.match("test")
+     |> Recipe.weigh_by_date("updated_at")
+     |> ManticoreQL.send!()
 
 %SphinxqlResponse{ .. }
 ```
@@ -116,25 +132,14 @@ There are more examples [here in the documentation](https://hexdocs.pm/giza_sphi
 
 There are several mix tasks packaged with Giza to help you get up and running with Sphinx immediately.  These are especially great if you are new to Sphinx and want a headstart learning configuration.
 
-Creates a sphinx config file with sensible defaults and info to connect to your database:
-```elixir
-mix giza.sphinx.config your_app YourApp.Repo
-```
-You can now open the generated file and update the SQL queries to whatever you want to index in your database.
-
-Runs the batch indexer using the Sphinx conf in sphinx/sphinx.conf:
-```elixir
-mix giza.sphinx.index
-```
-
-Starts the search daemon.. after this you are running Sphinx or Manticore with your index and can query!
+Starts the search daemon
 ```elixir
 mix giza.sphinx.searchd
 ```
 
 Run a query over the sql protocol
 ```elixir
-mix giza.sphinx.query "SELECT * FROM i_blog WHERE MATCH('miranda')"
+mix giza.sphinx.query "SELECT * FROM blog WHERE MATCH('miranda')"
 ```
 
 ### Native protocol
@@ -171,7 +176,7 @@ SphinxProtocol.query("blog_index", "subetei the swift")
 }
 ```
 
-https://hexdocs.pm/giza_sphinxsearch/1.0.0/Giza.SphinxProtocol.html#functions
+https://hexdocs.pm/giza_sphinxsearch/2.0.0/Giza.SphinxProtocol.html#functions
 
 
 ### Sphinx HTTP REST API (experimental)
@@ -185,16 +190,10 @@ https://hexdocs.pm/giza_sphinxsearch/Giza.Http.html#functions
 
 https://hexdocs.pm/giza_sphinxsearch/Giza.html#content
 
-And to learn more about Sphinx from there excellent documentation:
+And to learn more about Sphinx from there documentation:
 
 http://sphinxsearch.com/docs/current.html
 
-And to learn more about the recent Sphinx fork Manticore:
+And to learn more about the Sphinx fork Manticore:
 
 https://docs.manticoresearch.com/latest/html/
-
-## Upcoming Development
-
-- Do something about error messages from Maria client (they aren't currently easy to handle/read in Giza)
-
-- Create the ability to download and run the sphinx binary locally so the project can be setup immediately via mix

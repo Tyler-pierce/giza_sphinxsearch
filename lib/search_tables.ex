@@ -1,11 +1,18 @@
-defmodule SearchTables do
+defmodule Giza.SearchTables do
   @moduledoc """
   Table management functions for Manticore Search. Covers DDL (table lifecycle),
   DML (writing to RT tables), clustered DML (replication-aware writes),
   replication cluster management, and maintenance operations.
+
+  ## Table Create Options
+  @see https://manual.manticoresearch.com/Introduction
+  @see https://manual.manticoresearch.com/Searching/Sorting_and_ranking#Ranking-overview
+  @see https://manual.manticoresearch.com/Searching/Spell_correction#Fuzzy-Search
   """
 
   alias Giza.Structs.SphinxqlResponse
+
+  @default_min_infix_len 2
 
   # ==========================================================================
   # DDL — table lifecycle
@@ -378,10 +385,8 @@ defmodule SearchTables do
     run_query("SHOW TABLE #{name} STATUS")
   end
 
-  # ==========================================================================
-  # Private helpers
-  # ==========================================================================
-
+  # PRIVATE FUNCTIONS
+  ###################
   defp run_query(query_string) do
     adapter = Application.get_env(:giza_sphinxsearch, :query_adapter, Giza.QueryAdapter.MyXQL)
 
@@ -405,8 +410,20 @@ defmodule SearchTables do
 
   defp build_table_opts(opts) when is_binary(opts), do: opts
 
-  defp build_table_opts(opts) when is_list(opts) do
-    Enum.map_join(opts, " ", fn {k, v} -> "#{k}='#{v}'" end)
+  defp build_table_opts(opts) when is_list(opts), do: build_table_opts(opts, "")
+
+  defp build_table_opts([], opt_str), do: opt_str
+
+  defp build_table_opts([{:fuzzy_match, true} | t], opt_str) do
+    build_table_opts(t, "#{opt_str} min_infix_len='#{@default_min_infix_len}'")
+  end
+
+  defp build_table_opts([{:fuzzy_match, min_infix_len} | t], opt_str) do
+    build_table_opts(t, "#{opt_str} min_infix_len='#{min_infix_len}'")
+  end
+
+  defp build_table_opts([{k, v} | t], opt_str) do
+    build_table_opts(t, "#{opt_str} #{k}='#{v}'")
   end
 
   defp build_values(values) do

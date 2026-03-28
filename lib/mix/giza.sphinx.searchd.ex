@@ -1,6 +1,6 @@
 defmodule Mix.Tasks.Giza.Sphinx.Searchd do
   @moduledoc """
-  Mix shortcut to running the Sphinx Indexer to build an index against the data source
+  Mix wrapper to run searchd
   """
   use Mix.Task
 
@@ -8,7 +8,7 @@ defmodule Mix.Tasks.Giza.Sphinx.Searchd do
 
 
   def run([]) do
-    {result, _} = System.cmd("searchd", ["-c", "sphinx/sphinx.conf"])
+    {result, _} = System.cmd("searchd", [])
 
     Mix.shell.info result
 

@@ -1,4 +1,4 @@
-defmodule SphinxQL do
+defmodule Giza.SphinxQL do
 	@moduledoc """
 	Query building helper functions for SphinxQL requests (http://sphinxsearch.com/docs/devel.html#sphinxql-reference). 
 	This is the recommended way to query Sphinx (for client speed particularly) and will be the most supported style in 

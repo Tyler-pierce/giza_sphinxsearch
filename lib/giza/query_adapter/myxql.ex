@@ -8,6 +8,6 @@ defmodule Giza.QueryAdapter.MyXQL do
 
   @impl true
   def execute(query_string) do
-    MyXQL.query(:mysql_sphinx_client, query_string, [])
+    MyXQL.query(:mysql_sphinx_client, query_string, [], query_type: :text)
   end
 end
