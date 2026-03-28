@@ -51,7 +51,7 @@ defmodule Giza.Mixfile do
      description: "Giza: Manticore Client for Elixir",
      files: ["lib", "test", "config", "giza_erlang", "mix.exs", "README.md"],
      maintainers: ["Tyler Pierce"],
-     licenses: ["Apache 2.0"],
+     licenses: ["Apache-2.0"],
      links: %{
       "GitHub" => "https://github.com/Tyler-pierce/giza_sphinxsearch", 
       "Sphinx Search" => "http://sphinxsearch.com/",
