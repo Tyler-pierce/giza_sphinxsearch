@@ -49,7 +49,7 @@ defmodule Giza.Mixfile do
   defp package do
     [name: :giza_sphinxsearch,
      description: "Giza: Manticore Client for Elixir",
-     files: ["lib", "giza_erlang", "sphinx", "mix.exs", "README.md"],
+     files: ["lib", "test", "config", "giza_erlang", "mix.exs", "README.md"],
      maintainers: ["Tyler Pierce"],
      licenses: ["Apache 2.0"],
      links: %{
