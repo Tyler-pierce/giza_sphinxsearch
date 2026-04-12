@@ -4,6 +4,7 @@ defmodule Giza.SphinxQL.Recipe do
   trying to take advantage of advanced search functionality without having to know every nuance of sphinx'
   query language.
   """
+  alias Giza.SphinxQL
   alias Giza.Structs.SphinxqlQuery
 
   @doc """

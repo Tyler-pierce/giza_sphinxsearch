@@ -96,7 +96,7 @@ defmodule Giza.SearchTables do
     end)
 
     opts_sql = if opts == [], do: "", else: " " <> build_table_opts(opts)
-    run_query("CREATE TABLE #{name} type='distributed' #{parts_sql}#{opts_sql}")
+    run_query("CREATE TABLE IF NOT EXISTS #{name} type='distributed' #{parts_sql}#{opts_sql}")
   end
 
   @doc """

@@ -34,7 +34,8 @@ defmodule Giza.Mixfile do
     [
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
       {:req, "~> 0.5"},
-      {:myxql, "~> 0.7"}
+      {:myxql, "~> 0.7"},
+      {:telemetry, "~> 1.0"}
     ]
   end
 

@@ -82,12 +82,15 @@ defmodule Giza do
     {:ok, %SphinxqlResponse{matches: [..], total: 100, ..}}
   """
   def send(%SphinxqlQuery{} = query) do
-    query
-    |> case do
-         %{raw: nil} -> QueryBuilder.query_to_string(query)
-         %{raw: raw_query} -> raw_query
-       end
-    |> run_query()
+    query_string =
+      case query do
+        %{raw: nil} -> QueryBuilder.query_to_string(query)
+        %{raw: raw_query} -> raw_query
+      end
+
+    Giza.Telemetry.span(query_string, query.from, fn ->
+      run_query(query_string)
+    end)
   end
 
   @doc """
