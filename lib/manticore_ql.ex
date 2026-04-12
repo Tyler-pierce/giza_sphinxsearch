@@ -44,13 +44,13 @@ defmodule Giza.ManticoreQL do
       |> ManticoreQL.facet("price", order: "COUNT(*) DESC", limit: 10)
       |> ManticoreQL.send()
   """
-  def facet(%SphinxqlQuery{} = query, expr) when is_binary(expr) do
-    facet(query, expr, [])
-  end
+  def facet(%SphinxqlQuery{} = query, expr), do: facet(query, expr, [])
 
   def facet(%SphinxqlQuery{} = query, expr, opts) when is_binary(expr) and is_list(opts) do
     %{query | facets: query.facets ++ [build_facet_string(expr, opts)]}
   end
+
+  def facet(query, _, _), do: query
 
   @doc """
   Adds `HIGHLIGHT()` to the SELECT list so Manticore annotates matching keywords in stored
@@ -79,6 +79,8 @@ defmodule Giza.ManticoreQL do
     %{query | select: query.select ++ [build_highlight_expr(opts)]}
   end
 
+  def highlight(query, _), do: query
+
   @doc """
   Sets a KNN (k-nearest-neighbour) vector search clause in WHERE. Requires the table to
   have a `float_vector` attribute with an HNSW index.
@@ -98,6 +100,8 @@ defmodule Giza.ManticoreQL do
     vector_str = Enum.map_join(vector, ", ", &to_string/1)
     %{query | where: "KNN(#{field}, #{k}, (#{vector_str}))"}
   end
+
+  def knn(query, _, _, _), do: query
 
   @doc """
   Executes a percolate (reverse search) query — matches stored queries in a percolate table

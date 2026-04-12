@@ -3,7 +3,7 @@ defmodule Giza.Mixfile do
 
   def project do
     [app: :giza_sphinxsearch,
-     version: "2.0.0",
+     version: "2.1.0",
      elixir: "~> 1.9",
      erlc_paths: ["giza_erlang"],
      build_embedded: Mix.env == :prod,

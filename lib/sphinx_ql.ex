@@ -34,7 +34,9 @@ defmodule Giza.SphinxQL do
 	"""
 	def raw(%SphinxqlQuery{} = query, raw_query_string) when is_binary(raw_query_string) do
 		%{query | :raw => raw_query_string}
-	end	
+	end
+
+	def raw(query, _), do: query
 
 	@doc """
 	Return a SphinxQL query augmented with a select statement. Either a string (binary) or list of fields is acceptable input.
@@ -51,6 +53,8 @@ defmodule Giza.SphinxQL do
 		%{query | :select => Enum.map(fields, fn(x) -> String.trim(x) end)}
 	end
 
+	def select(query, _), do: query
+
 	@doc """
 	Shortcut helper function to form a suggestion query. Options can be passed to change the default limit and
 	max edits (amount of levenstein distance acceptable, so 4 would mean 4 characters can be wrong)
@@ -60,17 +64,21 @@ defmodule Giza.SphinxQL do
 		iex> SphinxQL.new()
 		     |> SphinxQL.suggest("sbetei", "posts_index", limit: 3, max_edits: 4)
 	"""
-	def suggest(%SphinxqlQuery{} = query, index, phrase, opts \\ []) when is_binary(index) do
+	def suggest(query, index, phrase, opts \\ [])
+
+	def suggest(%SphinxqlQuery{} = query, index, phrase, opts)
+	when is_binary(index) and is_binary(phrase) do
 		limit = Keyword.get(opts, :limit, @default_suggest_limit)
 
 		max_edits = Keyword.get(opts, :max_edits, @default_suggest_max_edits)
 
 		call(
 			query,
-			"QSUGGEST('" <> phrase <> "','" <> index <> "', " <> Integer.to_string(limit) 
-			<> " as limit, " <> Integer.to_string(max_edits) <> " as max_edits)"
+			"QSUGGEST('#{phrase}','#{index}', #{limit} AS limit, #{max_edits} AS max_edits"
 		)
 	end
+
+	def suggest(query, _, _, _), do: query
 
 	@doc """
 	Return a SphinxQL query augmented with a CALL statement. A string is acceptable input.
@@ -83,6 +91,8 @@ defmodule Giza.SphinxQL do
 		%{query | :call => call}
 	end
 
+	def call(query, _), do: query
+
 	@doc """
 	Returns a SphinxQL query augmented with an index to select from.
 
@@ -93,6 +103,8 @@ defmodule Giza.SphinxQL do
 	def from(%SphinxqlQuery{} = query, index) when is_binary(index) do
 		%{query | :from => index}
 	end
+
+	def from(query, _), do: query
 
 	@doc """
 	Returns a SphinxQL query augmented with a where clause which will be formated as a MATCH query, a common way
@@ -110,6 +122,8 @@ defmodule Giza.SphinxQL do
 		%{query | :where => "MATCH('" <> String.trim(search_term) <> "')"}
 	end
 
+	def match(query, _), do: query
+
 	@doc """
 	Returns a SphinxQL query with a where clause added. A string representing the whole where part of your query
 	is the only accepted input. Often used for filtering as =/IN/etc map directly to attribute filters.
@@ -121,6 +135,8 @@ defmodule Giza.SphinxQL do
 	def where(%SphinxqlQuery{} = query, where) when is_binary(where) do
 		%{query | :where => String.trim(where)}
 	end
+
+	def where(query, _), do: query
 
 	@doc """
 	Returns an api query augmented with a limit for amount of returned documents.  Note that Sphinx also allows for setting
@@ -134,6 +150,8 @@ defmodule Giza.SphinxQL do
 		%{query | :limit => limit}
 	end 
 
+	def limit(query, _), do: query
+
 	@doc """
 	Returns a SphinxQL query augmented with a limit for amount of returned documents.  Only an integer is acceptable input. This
 	is normally used to support pagination.
@@ -145,6 +163,8 @@ defmodule Giza.SphinxQL do
 	def offset(%SphinxqlQuery{} = query, offset) when is_integer(offset) do
 		%{query | :offset => offset}
 	end
+
+	def offset(query, _), do: query
 
 	@doc """
 	Returns a SphinxQL query with an option added such as used for the expression ranker
@@ -160,6 +180,8 @@ defmodule Giza.SphinxQL do
 	def option(%SphinxqlQuery{} = query, option) do
 		%{query | :option => option}
 	end
+
+	def option(query, _), do: query
 
 	@doc """
 	Add an order by clause to return sorted by results.  Sphinx accepts a max of 5 order by attributes and
@@ -181,6 +203,8 @@ defmodule Giza.SphinxQL do
 	def order_by(%SphinxqlQuery{} = query, order_by) do
 		%{query | :order_by => order_by}
 	end
+
+	def order_by(query, _), do: order_by
 
 	@doc """
 	Return meta information about the latest query on the current client.  This is commonly used to retrieve the total returned
