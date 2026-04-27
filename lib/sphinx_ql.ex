@@ -204,7 +204,7 @@ defmodule Giza.SphinxQL do
 		%{query | :order_by => order_by}
 	end
 
-	def order_by(query, _), do: order_by
+	def order_by(query, _), do: query
 
 	@doc """
 	Return meta information about the latest query on the current client.  This is commonly used to retrieve the total returned
