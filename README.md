@@ -23,7 +23,7 @@ Add `giza_sphinxsearch` to your list of dependencies in `mix.exs` and add to you
 
 ```elixir
 def deps do
-  [{:giza_sphinxsearch, "~> 2.0"}]
+  [{:giza_sphinxsearch, "~> 2.1"}]
 end
 ```
 
@@ -97,9 +97,9 @@ iex> SphinxQL.new()
 {:ok, %SphinxqlResponse{ .. }}
 ```
 
-#### Recipes!
+#### Recipes
 
-The recipe library allows you to make use of complex sphinx queries pre-prepared by Giza.  The first such recipe made
+The recipe library wraps sphinx/manticore queries that may be difficult to remember.  The first such recipe made
 available is the ability to weigh your queries toward newer entries:
 
 ```elixir
